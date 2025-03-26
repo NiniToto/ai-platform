@@ -25,7 +25,7 @@ export default function PdfSummaryPage() {
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await fetch('http://localhost:8000/pdf-summary', {
+      const response = await fetch('https://e3d0-39-118-216-92.ngrok-free.app/pdf-summary', {
         method: 'POST',
         body: formData,
       });

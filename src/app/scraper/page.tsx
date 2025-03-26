@@ -15,7 +15,7 @@ export default function ScraperPage() {
     setResult('');
 
     try {
-      const res = await fetch('http://localhost:8000/scrape', {
+      const res = await fetch('https://e3d0-39-118-216-92.ngrok-free.app/scrape', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url, keyword }),

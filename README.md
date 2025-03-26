@@ -38,7 +38,7 @@ yarn install
 3. 환경 변수를 설정합니다:
 `.env.local` 파일을 생성하고 다음 내용을 추가합니다:
 ```
-NEXT_PUBLIC_API_URL=http://localhost:8000
+NEXT_PUBLIC_API_URL=https://e3d0-39-118-216-92.ngrok-free.app
 ```
 
 4. 개발 서버를 실행합니다:
@@ -58,7 +58,7 @@ yarn dev
    - `.env.local` 파일에 `NEXT_PUBLIC_API_URL=http://localhost:8000`을 설정하세요.
 
 2. 원격 백엔드 서버를 사용하는 경우:
-   - `.env.local` 파일에 `NEXT_PUBLIC_API_URL=https://your-api-server.com`을 설정하세요.
+   - `.env.local` 파일에 `NEXT_PUBLIC_API_URL=https://e3d0-39-118-216-92.ngrok-free.app`을 설정하세요.
 
 ## 라이선스
 

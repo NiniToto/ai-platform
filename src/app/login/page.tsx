@@ -15,7 +15,7 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const res = await fetch('http://localhost:8000/api/auth/login', {
+      const res = await fetch('https://e3d0-39-118-216-92.ngrok-free.app/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

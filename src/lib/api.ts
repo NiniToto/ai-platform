@@ -4,7 +4,7 @@ export async function uploadFiles(files: File[], modelName: string) {
     files.forEach(file => formData.append("files", file));
     formData.append("model_name", modelName);
   
-    const res = await fetch("http://localhost:8000/api/rag/upload", {
+    const res = await fetch("https://e3d0-39-118-216-92.ngrok-free.app/api/rag/upload", {
       method: "POST",
       body: formData,
     });
@@ -13,7 +13,7 @@ export async function uploadFiles(files: File[], modelName: string) {
   }
   
   export async function sendPrompt(prompt: string) {
-    const res = await fetch(`http://localhost:8000/api/rag/query?prompt=${encodeURIComponent(prompt)}`);
+    const res = await fetch(`https://e3d0-39-118-216-92.ngrok-free.app/api/rag/query?prompt=${encodeURIComponent(prompt)}`);
     const data = await res.json();
     return data.response;
   }

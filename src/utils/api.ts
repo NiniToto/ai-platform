@@ -1,5 +1,5 @@
 // API 기본 URL 설정
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://tnlabs-backend.onrender.com';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://e3d0-39-118-216-92.ngrok-free.app';
 
 // 기본 헤더 설정 함수
 const getHeaders = (includeAuth: boolean = false, isFormData: boolean = false) => {
