@@ -1,5 +1,5 @@
 // API 기본 URL 설정
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://tnlabs-backend.onrender.com';
 
 // 기본 헤더 설정 함수
 const getHeaders = (includeAuth: boolean = false, isFormData: boolean = false) => {
