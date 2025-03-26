@@ -60,42 +60,6 @@ yarn dev
 2. 원격 백엔드 서버를 사용하는 경우:
    - `.env.local` 파일에 `NEXT_PUBLIC_API_URL=https://your-api-server.com`을 설정하세요.
 
-## 배포 방법
-
-### Netlify를 통한 배포
-
-1. Netlify 계정을 생성합니다.
-2. `netlify.toml` 파일이 프로젝트 루트 디렉토리에 있는지 확인합니다.
-3. GitHub 저장소를 Netlify에 연결합니다.
-4. 다음 빌드 설정을 구성합니다:
-   - 빌드 명령어: `npm run build`
-   - 게시 디렉토리: `.next`
-5. 환경 변수를 설정합니다:
-   - `NEXT_PUBLIC_API_URL`을 백엔드 서버 URL로 설정합니다.
-6. 배포를 시작합니다.
-
-### 직접 배포하기
-
-1. 프로덕션 빌드를 생성합니다:
-```bash
-npm run build
-# 또는
-yarn build
-```
-
-2. 빌드된 애플리케이션을 시작합니다:
-```bash
-npm run start
-# 또는
-yarn start
-```
-
-## 관리자 계정
-
-데모 환경에서는 다음 계정으로 관리자 로그인이 가능합니다:
-- 아이디: admin
-- 비밀번호: password
-
 ## 라이선스
 
 MIT
