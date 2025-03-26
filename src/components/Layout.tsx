@@ -17,8 +17,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   // 로컬 스토리지에서 관리자 상태 가져오기
   useEffect(() => {
-    const adminStatus = localStorage.getItem('isAdmin') === 'true';
-    setIsAdmin(adminStatus);
+    // access_token이 있으면 관리자로 설정
+    const token = localStorage.getItem('access_token');
+    setIsAdmin(!!token);
   }, []);
 
   // 관리자 모드 요청 처리
@@ -26,7 +27,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     if (isAdmin) {
       // 이미 관리자인 경우 일반 모드로 전환
       setIsAdmin(false);
-      localStorage.setItem('isAdmin', 'false');
+      localStorage.removeItem('access_token'); // access_token 제거
       setIsModalOpen(false);
     } else {
       // 일반 모드인 경우 로그인 모달 표시
@@ -38,7 +39,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   // 로그인 성공 처리
   const handleLoginSuccess = () => {
     setIsAdmin(true);
-    localStorage.setItem('isAdmin', 'true');
     setShowLoginModal(false);
   };
 

@@ -19,6 +19,10 @@ interface UploadedFile {
   embedding_model: string;
 }
 
+interface ChatResponse {
+  answer: string;
+}
+
 export default function ChatbotPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -41,8 +45,8 @@ export default function ChatbotPage() {
   useEffect(() => {
     const fetchFiles = async () => {
       try {
-        const isAdminUser = localStorage.getItem('isAdmin') === 'true';
-        setIsAdmin(isAdminUser);
+        const token = localStorage.getItem('access_token');
+        setIsAdmin(!!token);
         
         const files = await api.rag.getFiles();
         setUploadedFiles(Array.isArray(files) ? files : []);
@@ -114,7 +118,7 @@ export default function ChatbotPage() {
     setIsLoading(true);
 
     try {
-      const response = await api.rag.chat(userMessage, selectedModel);
+      const response = await api.rag.chat(userMessage, selectedModel) as ChatResponse;
       setMessages(prev => [...prev, { role: 'assistant', content: response.answer }]);
     } catch (error) {
       console.error('채팅 요청 실패:', error);
