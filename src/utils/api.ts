@@ -1,6 +1,5 @@
 // API 기본 URL 설정
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://e3d0-39-118-216-92.ngrok-free.app';
-
 // 기본 헤더 설정 함수
 const getHeaders = (includeAuth: boolean = false, isFormData: boolean = false) => {
   const headers: Record<string, string> = {};
@@ -75,14 +74,27 @@ export const api = {
         const formData = new FormData();
         formData.append('file', file);
 
+        // FormData 사용시 Content-Type 헤더를 브라우저가 자동으로 설정하도록 함
+        const headers: Record<string, string> = {};
+        const token = localStorage.getItem('access_token');
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+
+        console.log('업로드 시작:', file.name, file.size);
+        
         const response = await fetch(`${API_BASE_URL}/api/rag/upload`, {
           method: 'POST',
-          headers: getHeaders(true, true),
+          headers,
           body: formData,
         });
 
+        console.log('업로드 응답 상태:', response.status);
+        
         if (!response.ok) {
-          throw new Error('파일 업로드에 실패했습니다');
+          const errorText = await response.text();
+          console.error('업로드 실패 응답:', errorText);
+          throw new Error(`파일 업로드에 실패했습니다: ${response.status}`);
         }
 
         return await response.json();
