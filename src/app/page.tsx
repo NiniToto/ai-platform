@@ -1,103 +1,127 @@
-import Image from "next/image";
+// src/app/page.tsx
+'use client';
+
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import Layout from '@/components/Layout';
+
+const categories = [
+  {
+    title: '💬 채팅 & 대화',
+    features: [
+      {
+        title: '📚 RAG 챗봇',
+        description: 'PDF 문서를 업로드하고 대화하며 정보를 탐색하세요.',
+        href: '/chatbot',
+        icon: '🤖',
+        isReady: true,
+      },
+      {
+        title: '💭 심리상담 AI',
+        description: 'AI와 대화하며 심리 상태를 분석하고 상담받으세요.',
+        href: '/counseling',
+        icon: '💫',
+        isReady: false,
+      },
+      {
+        title: '🎨 이미지 대화 AI',
+        description: '사진을 업로드하고 실시간으로 대화하며 이미지를 분석하세요.',
+        href: '/image-chat',
+        icon: '🖼️',
+        isReady: false,
+      },
+    ],
+  },
+  {
+    title: '📝 문서 & 텍스트',
+    features: [
+      {
+        title: '📄 문서 요약 AI',
+        description: 'PDF 문서를 자동으로 요약하고 핵심 내용을 파악하세요.',
+        href: '/pdf-summary',
+        icon: '📑',
+        isReady: false,
+      },
+      {
+        title: '✍️ 한글 문서 AI',
+        description: 'AI가 한글 문서를 작성하고 편집해드립니다.',
+        href: '/hwp-writer',
+        icon: '📝',
+        isReady: false,
+      },
+    ],
+  },
+  {
+    title: '🔍 정보 수집 & 분석',
+    features: [
+      {
+        title: '🔍 웹 스크래핑 AI',
+        description: '웹사이트에서 원하는 정보를 자동으로 추출하고 분석하세요.',
+        href: '/scraper',
+        icon: '🌐',
+        isReady: false,
+      },
+      {
+        title: '💼 기업분석 AI',
+        description: '자기소개서 작성을 위한 맞춤형 기업 분석을 받으세요.',
+        href: '/company-analysis',
+        icon: '🏢',
+        isReady: false,
+      },
+      {
+        title: '✈️ 여행지 추천 AI',
+        description: '선호도와 조건에 맞는 최적의 여행지를 추천해드립니다.',
+        href: '/travel-recommendation',
+        icon: '🌍',
+        isReady: false,
+      },
+    ],
+  },
+];
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <Layout>
+      <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg p-8 border border-white/20">
+        <div className="text-center mb-10">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">
+            TNLabs AI 플랫폼
+          </h1>
+          <p className="text-gray-600 text-xl">
+            다양한 AI 서비스를 한곳에서 경험해보세요.
+          </p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+
+        <div className="space-y-12">
+          {categories.map((category, index) => (
+            <div key={index}>
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">{category.title}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {category.features.map((feature, featureIndex) => (
+                  <Link
+                    href={feature.href}
+                    key={featureIndex}
+                    className="bg-white/50 backdrop-blur-sm p-6 rounded-xl shadow-md border border-white/20 transition-transform hover:transform hover:scale-105 hover:shadow-lg relative"
+                  >
+                    {feature.isReady ? (
+                      <div className="absolute top-0 right-0 bg-emerald-500 text-white text-xs font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg z-10 flex items-center">
+                        <span className="mr-1">✓</span> 이용 가능
+                      </div>
+                    ) : (
+                      <div className="absolute top-0 right-0 bg-amber-500 text-white text-xs font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg z-10">
+                        공사중 🚧
+                      </div>
+                    )}
+                    <div className="text-4xl mb-3">{feature.icon}</div>
+                    <h3 className="text-xl font-semibold text-gray-800 mb-2">{feature.title}</h3>
+                    <p className="text-gray-600">{feature.description}</p>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </Layout>
   );
 }
