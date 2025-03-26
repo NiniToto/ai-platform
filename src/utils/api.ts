@@ -32,6 +32,8 @@ export const api = {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ username, password }),
+          credentials: 'include',
+          mode: 'cors',
         });
 
         if (!response.ok) {
@@ -54,9 +56,12 @@ export const api = {
         // 백엔드 API 요청
         const response = await fetch(`${API_BASE_URL}/api/rag/files`, {
           headers: getHeaders(true),
+          credentials: 'include',
+          mode: 'cors',
         });
 
         if (!response.ok) {
+          console.error('파일 목록 조회 실패:', response.status, response.statusText);
           throw new Error('파일 목록을 가져오는데 실패했습니다');
         }
 
@@ -82,11 +87,14 @@ export const api = {
         }
 
         console.log('업로드 시작:', file.name, file.size);
+        console.log('API URL:', API_BASE_URL);
         
         const response = await fetch(`${API_BASE_URL}/api/rag/upload`, {
           method: 'POST',
           headers,
           body: formData,
+          credentials: 'include',
+          mode: 'cors',
         });
 
         console.log('업로드 응답 상태:', response.status);
@@ -111,6 +119,8 @@ export const api = {
         const response = await fetch(`${API_BASE_URL}/api/rag/delete/${encodeURIComponent(filename)}`, {
           method: 'DELETE',
           headers: getHeaders(true),
+          credentials: 'include',
+          mode: 'cors',
         });
 
         if (!response.ok) {
@@ -135,6 +145,8 @@ export const api = {
             query: message, 
             model,
           }),
+          credentials: 'include',
+          mode: 'cors',
         });
 
         if (!response.ok) {
