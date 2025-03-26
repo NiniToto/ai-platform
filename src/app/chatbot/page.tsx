@@ -79,16 +79,10 @@ export default function ChatbotPage() {
     if (!file) return;
 
     try {
-      console.log(`파일 업로드 시작: ${file.name}, 크기: ${file.size} 바이트`);
       await api.rag.uploadFile(file);
-      console.log('파일 업로드 성공!');
-      
       // 파일 목록 새로고침
-      console.log('파일 목록 새로고침 시작');
       const files = await api.rag.getFiles();
-      console.log('파일 목록 조회 결과:', files);
       setUploadedFiles(Array.isArray(files) ? files : []);
-      console.log('파일 목록 업데이트 완료');
     } catch (error) {
       console.error('파일 업로드 실패:', error);
       alert('파일 업로드에 실패했습니다.');
