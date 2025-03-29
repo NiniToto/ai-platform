@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { api } from '@/utils/api';
+import { api } from '@/lib/api/index';
 
 interface LoginModalProps {
   isOpen: boolean;
