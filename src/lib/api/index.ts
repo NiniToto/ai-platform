@@ -10,7 +10,9 @@ export const api = {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
           },
+          credentials: 'include',
           body: JSON.stringify({ username, password }),
         });
 
@@ -27,27 +29,18 @@ export const api = {
   },
   rag: {
     async getFiles() {
-      try { 
-        const formData = new FormData();
+      try {
         const response = await fetch(`${API_BASE_URL}/api/rag/files`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: formData,
-          });
-
-        if (!response.ok) {
-          throw new Error('파일 목록을 가져오는데 실패했습니다');
-        }
-
-        const text = await response.text();
-        try {
-          return JSON.parse(text);
-        } catch (e) {
-          console.error('파일 목록 응답 텍스트:', text);
-          throw new Error('응답을 파싱하는데 실패했습니다');
-        }
+          method: 'POST',
+          headers: {
+            ...getHeaders(),
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          credentials: 'include',
+        });
+        if (!response.ok) throw new Error('파일 목록 조회 실패');
+        return response.json();
       } catch (error) {
         console.error('파일 목록 조회 에러:', error);
         throw error;
@@ -74,8 +67,9 @@ export const api = {
           method: 'POST',
           headers: {
             ...getHeaders(true),
-            'Accept': 'application/json'
+            'Accept': 'application/json',
           },
+          credentials: 'include',
           body: formData,
         });
 
@@ -98,7 +92,11 @@ export const api = {
       try {
         const response = await fetch(`${API_BASE_URL}/api/rag/delete/${encodeURIComponent(filename)}`, {
           method: 'DELETE',
-          headers: getHeaders(true),
+          headers: {
+            ...getHeaders(true),
+            'Accept': 'application/json',
+          },
+          credentials: 'include',
         });
 
         if (!response.ok) {
@@ -117,8 +115,11 @@ export const api = {
         const response = await fetch(`${API_BASE_URL}/api/rag/ask`, {
           method: 'POST',
           headers: {
+            ...getHeaders(),
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
           },
+          credentials: 'include',
           body: JSON.stringify({ 
             query: message, 
             model,
