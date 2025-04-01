@@ -136,5 +136,78 @@ export const api = {
         throw error;
       }
     },
+  },
+  crawling: {
+    async naverFinance(pages: number = 1) {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/crawling/naver-finance?pages=${pages}`, {
+          method: 'GET',
+          headers: {
+            ...getHeaders(),
+            'Accept': 'application/json',
+          },
+          credentials: 'include', 
+        });
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ detail: `네이버 금융 크롤링 실패 (${response.status})` }));
+          throw new Error(errorData.detail || '네이버 금융 크롤링 실패');
+        }
+        return await response.json();
+      } catch (error) {
+        console.error('네이버 금융 크롤링 에러:', error);
+        throw error;
+      }
+    },
+
+    async coupang(keyword: string, maxItems: number = 10) {
+      try {
+        const params = new URLSearchParams({
+          keyword,
+          max_items: maxItems.toString(),
+        });
+        const response = await fetch(`${API_BASE_URL}/api/crawling/coupang?${params.toString()}`, {
+          method: 'GET',
+          headers: {
+            ...getHeaders(),
+            'Accept': 'application/json',
+          },
+          credentials: 'include',
+        });
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ detail: `쿠팡 크롤링 실패 (${response.status})` }));
+          throw new Error(errorData.detail || '쿠팡 크롤링 실패');
+        }
+        return await response.json();
+      } catch (error) {
+        console.error('쿠팡 크롤링 에러:', error);
+        throw error;
+      }
+    },
+
+    async naverRealEstate(complexNo: number, tradeType: string = 'A1', page: number = 1) {
+      try {
+        const params = new URLSearchParams({
+          complex_no: complexNo.toString(),
+          trade_type: tradeType,
+          page: page.toString(),
+        });
+        const response = await fetch(`${API_BASE_URL}/api/crawling/naver-realestate?${params.toString()}`, {
+          method: 'GET',
+          headers: {
+            ...getHeaders(),
+            'Accept': 'application/json',
+          },
+          credentials: 'include',
+        });
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ detail: `네이버 부동산 크롤링 실패 (${response.status})` }));
+          throw new Error(errorData.detail || '네이버 부동산 크롤링 실패');
+        }
+        return await response.json();
+      } catch (error) {
+        console.error('네이버 부동산 크롤링 에러:', error);
+        throw error;
+      }
+    },
   }
 }; 

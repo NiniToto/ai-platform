@@ -19,8 +19,13 @@ const loadingMessages = [
   "정확한 답변을 위해 노력 중!",
 ];
 
+const initialGreeting: Message = {
+  role: 'assistant',
+  content: '안녕하세요! 👋 궁금한 점이 있으시면 언제든지 물어보세요. 왼쪽에 있는 문서 목록의 내용을 기반으로 답변해 드릴 수 있습니다.',
+};
+
 export default function ChatBox({ selectedModel }: ChatBoxProps) {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([initialGreeting]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [currentLoadingMessage, setCurrentLoadingMessage] = useState(loadingMessages[0]);
@@ -53,11 +58,18 @@ export default function ChatBox({ selectedModel }: ChatBoxProps) {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages.length]);
 
   const scrollToBottom = () => {
     if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+      setTimeout(() => {
+        if (messagesContainerRef.current) {
+            messagesContainerRef.current.scrollTo({
+              top: messagesContainerRef.current.scrollHeight,
+              behavior: 'smooth'
+            });
+        }
+      }, 0);
     }
   };
 
@@ -125,12 +137,12 @@ export default function ChatBox({ selectedModel }: ChatBoxProps) {
   };
 
   return (
-    <div className="flex flex-col h-full flex-grow">
-      <div ref={messagesContainerRef} className="flex-grow overflow-y-auto space-y-4 pr-1 scroll-smooth">
+    <div className="flex flex-col h-full">
+      <div ref={messagesContainerRef} className="flex-grow overflow-y-auto space-y-4 pr-2 scroll-smooth mb-4">
         {messages.map((message, index) => (
           <div
             key={index}
-            className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+            className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} ${index === messages.length - 1 ? 'opacity-0 animate-fade-in' : ''}`}
           >
             <div
               className={`max-w-[85%] rounded-xl p-3 text-sm shadow-sm ${ 
@@ -150,7 +162,7 @@ export default function ChatBox({ selectedModel }: ChatBoxProps) {
           </div>
         ))}
         {isLoading && (
-          <div className="flex justify-start">
+          <div className="flex justify-start opacity-0 animate-fade-in" style={{animationDelay: '100ms'}}>
             <div className="bg-white border border-gray-200/80 rounded-xl p-3 shadow-sm flex items-center space-x-2">
               <div className="flex space-x-1">
                 <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0s' }}></span>
@@ -163,7 +175,7 @@ export default function ChatBox({ selectedModel }: ChatBoxProps) {
         )}
       </div>
 
-      <form onSubmit={handleSubmit} className="flex gap-2 pt-4 border-t border-gray-200/80 flex-shrink-0 mt-auto">
+      <form onSubmit={handleSubmit} className="flex gap-2 pt-4 border-t border-gray-200/80 flex-shrink-0">
         <input
           type="text"
           value={input}

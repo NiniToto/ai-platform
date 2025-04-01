@@ -126,23 +126,9 @@ export default function ChatbotPage() {
           {/* Right Panel */}
           {/* Use flex-col and h-full to utilize stretched grid height */}
           <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200/90 flex flex-col h-full">
-            {/* Guide Section */}
-            <div className="p-3 sm:p-4 border-b border-gray-200/90 bg-gradient-to-r from-gray-50 to-gray-100/80 rounded-t-lg flex-shrink-0">
-              <div className="flex items-start gap-2 sm:gap-3">
-                <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center text-blue-600 flex-shrink-0 mt-0.5">
-                  💡
-                </div>
-                <div className="flex-grow">
-                  <h3 className="font-semibold text-blue-800 text-sm sm:text-base mb-0.5">안내</h3>
-                  <p className="text-xs sm:text-sm text-gray-600">
-                    좌측 목록의 문서에 대해 질문해주세요.
-                    현재 모델: <span className="font-medium text-gray-800">{models.find(m => m.id === selectedModel)?.name}</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-            {/* ChatBox Container */}
-            <div className="flex-1 overflow-y-auto p-3 sm:p-4 min-h-0">
+            {/* ChatBox Container - Adjusted padding and removed overflow/min-height */}
+            {/* Let ChatBox handle its internal scrolling */}
+            <div className="flex-1 p-3 sm:p-4 flex flex-col">
               <ChatBox selectedModel={selectedModel} />
             </div>
           </div>

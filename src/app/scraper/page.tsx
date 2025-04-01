@@ -1,102 +1,89 @@
 'use client';
 
 import { useState } from 'react';
-import Layout from '@/components/Layout';
+import Layout from '@/components/layout/Layout';
+import CrawlingForm, { CrawlingSite } from '@/features/crawling/components/CrawlingForm';
+import CrawlingResults from '@/features/crawling/components/CrawlingResults';
+import { api } from '@/lib/api/index';
+import { NaverFinanceItem, CoupangItem, NaverRealEstateItem } from '@/types/crawling';
+
+type CrawlingResultData = NaverFinanceItem[] | CoupangItem[] | NaverRealEstateItem[];
 
 export default function ScraperPage() {
-  const [url, setUrl] = useState('');
-  const [keyword, setKeyword] = useState('');
-  const [result, setResult] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [results, setResults] = useState<CrawlingResultData>([]);
+  const [currentSite, setCurrentSite] = useState<CrawlingSite | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleScrape = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setResult('');
+  const handleCrawlSubmit = async (site: CrawlingSite, params: any) => {
+    setIsLoading(true);
+    setError(null);
+    setResults([]);
+    setCurrentSite(site);
 
     try {
-      const res = await fetch('https://e3d0-39-118-216-92.ngrok-free.app/scrape', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url, keyword }),
-      });
-
-      const data = await res.json();
-      setResult(data.result);
-    } catch (err) {
-      setResult('에러 발생! 서버가 켜져 있는지 확인해주세요.');
+      let responseData;
+      if (site === 'naver_finance') {
+        responseData = await api.crawling.naverFinance(params.pages);
+      } else if (site === 'coupang') {
+        responseData = await api.crawling.coupang(params.keyword, params.max_items);
+      } else if (site === 'naver_realestate') {
+        responseData = await api.crawling.naverRealEstate(
+          params.complex_no,
+          params.trade_type,
+          params.page
+        );
+      }
+      setResults(Array.isArray(responseData) ? responseData : []);
+    } catch (err: any) {
+      console.error('크롤링 요청 실패:', err);
+      setError(err.message || '크롤링 중 오류가 발생했습니다.');
+      setResults([]);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
+  const getSiteDisplayName = (site: CrawlingSite | null): string => {
+    switch(site) {
+      case 'naver_finance': return '네이버 금융';
+      case 'coupang': return '쿠팡';
+      case 'naver_realestate': return '네이버 부동산';
+      default: return '';
+    }
+  }
+
   return (
     <Layout>
-      <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg p-8 border border-white/20">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">🌐 웹 스크래핑</h1>
-        <p className="text-gray-600 text-lg mb-6">웹사이트의 정보를 자동으로 수집하고 분석하세요.</p>
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-6">🌐 웹 스크래핑 AI</h1>
+        <p className="text-gray-600 text-lg mb-8">네이버 금융, 쿠팡, 네이버 부동산에서 정보를 검색하고 수집합니다.</p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div className="bg-white/50 backdrop-blur-sm p-6 rounded-xl shadow-md border border-white/20">
-            <h2 className="text-xl font-semibold text-gray-800 mb-3">🔍 데이터 수집</h2>
-            <p className="text-gray-600">웹사이트의 텍스트, 이미지, 링크 등을 자동으로 수집합니다.</p>
+        <CrawlingForm onSubmit={handleCrawlSubmit} isLoading={isLoading} />
+
+        {error && (
+          <div className="mt-6 p-4 bg-red-50 text-red-700 border border-red-200 rounded-lg shadow-sm">
+            <p className="font-medium mb-1">⚠️ 오류 발생</p>
+            <p className="text-sm">{error}</p>
           </div>
-          <div className="bg-white/50 backdrop-blur-sm p-6 rounded-xl shadow-md border border-white/20">
-            <h2 className="text-xl font-semibold text-gray-800 mb-3">📊 데이터 분석</h2>
-            <p className="text-gray-600">수집된 데이터를 분석하여 의미 있는 정보를 추출합니다.</p>
+        )}
+
+        {!isLoading && !error && currentSite !== null && (
+          <div className="mt-8">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">📊 크롤링 결과 ({getSiteDisplayName(currentSite)})</h2>
+            <CrawlingResults results={results} site={currentSite} />
           </div>
-        </div>
-
-        <form onSubmit={handleScrape} className="space-y-4">
-          <div>
-            <label htmlFor="url" className="block text-sm font-medium text-gray-700 mb-1">
-              웹사이트 URL
-            </label>
-            <input
-              type="url"
-              id="url"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              placeholder="https://example.com"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/80"
-              required
-            />
-          </div>
-
-          <div>
-            <label htmlFor="keyword" className="block text-sm font-medium text-gray-700 mb-1">
-              검색 키워드 (선택)
-            </label>
-            <input
-              type="text"
-              id="keyword"
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
-              placeholder="찾고 싶은 키워드를 입력하세요"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/80"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading || !url.trim()}
-            className="w-full bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
-          >
-            {loading ? (
-              <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                <span>스크래핑 중...</span>
-              </>
-            ) : (
-              '스크랩 시작'
-            )}
-          </button>
-        </form>
-
-        {result && (
-          <div className="mt-8 bg-white/50 backdrop-blur-sm p-6 rounded-xl shadow-md border border-white/20">
-            <h2 className="text-xl font-semibold text-gray-800 mb-3">📝 스크래핑 결과</h2>
-            <div className="text-gray-600 whitespace-pre-wrap">{result}</div>
+        )}
+        
+        {isLoading && (
+          <div className="mt-8 text-center py-10">
+            <div className="inline-flex items-center gap-3 bg-white p-4 rounded-lg shadow-md border border-gray-200">
+              <svg className="animate-spin h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <span className="text-gray-700 font-medium">데이터를 수집하고 있습니다...</span>
+            </div>
           </div>
         )}
       </div>
